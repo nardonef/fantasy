@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 
 export const CARD_MS = 4000;
 const TICK_MS = 100;
@@ -41,6 +41,7 @@ export function StoryCardStack() {
   const [index, setIndex] = useState(0);
   const [elapsed, setElapsed] = useState(0);
   const reduced = useReducedMotionPref();
+  const contentId = useId();
   // Timer state lives in refs so the single interval always reads live values
   // and no setState is called from inside an updater (StrictMode double-invokes updaters).
   const elapsedRef = useRef(0);
@@ -81,8 +82,9 @@ export function StoryCardStack() {
         aria-label="Next story card"
         data-active-index={index}
         onClick={advance}
-        onMouseEnter={() => { hoveredRef.current = true; }}
-        onMouseLeave={() => { hoveredRef.current = false; }}
+        aria-describedby={contentId}
+        onPointerEnter={(e) => { if (e.pointerType !== "touch") hoveredRef.current = true; }}
+        onPointerLeave={(e) => { if (e.pointerType !== "touch") hoveredRef.current = false; }}
         className={`relative flex size-full cursor-pointer flex-col justify-between overflow-hidden rounded-[26px] px-7 pb-7 pt-14 text-left shadow-[0_40px_120px_-20px_rgba(0,0,0,0.8)] ${paper ? "bg-chalk text-field" : "bg-field text-chalk"}`}
       >
         <div className="absolute inset-x-[18px] top-[18px] flex gap-[5px]" aria-hidden>
@@ -101,6 +103,7 @@ export function StoryCardStack() {
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={index}
+            id={contentId}
             initial={{ opacity: 0, y: reduced ? 0 : 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}

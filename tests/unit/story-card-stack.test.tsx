@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { StrictMode } from "react";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CARD_MS, StoryCardStack } from "@/components/story-card-stack";
 
@@ -43,12 +43,39 @@ describe("StoryCardStack", () => {
     render(<StoryCardStack />);
     const b = screen.getByRole("button", { name: /next story card/i });
     act(() => { vi.advanceTimersByTime(3000); });
-    fireEvent.mouseEnter(b);
+    fireEvent.pointerEnter(b, { pointerType: "mouse" });
     act(() => { vi.advanceTimersByTime(10000); });
     expect(idx()).toBe("0");
-    fireEvent.mouseLeave(b);
+    fireEvent.pointerLeave(b, { pointerType: "mouse" });
     act(() => { vi.advanceTimersByTime(1000); });
     expect(idx()).toBe("1");
+  });
+
+  it("does not pause on a touch pointerenter", () => {
+    render(<StoryCardStack />);
+    const b = screen.getByRole("button", { name: /next story card/i });
+    fireEvent.pointerEnter(b, { pointerType: "touch" });
+    act(() => { vi.advanceTimersByTime(CARD_MS); });
+    expect(idx()).toBe("1");
+  });
+
+  it("describes the button with the active card content", async () => {
+    // motion's exit animation never completes in jsdom; reduced motion (duration 0) lets the swap finish
+    const original = window.matchMedia;
+    window.matchMedia = vi.fn().mockImplementation((q: string) => ({
+      matches: q.includes("reduce"), media: q, addEventListener: vi.fn(), removeEventListener: vi.fn(),
+    })) as unknown as typeof window.matchMedia;
+    try {
+      vi.useRealTimers();
+      render(<StoryCardStack />);
+      const b = screen.getByRole("button", { name: /next story card/i });
+      const text = () => document.getElementById(b.getAttribute("aria-describedby")!)?.textContent ?? "";
+      expect(text()).toContain("Six wins, still on your bench.");
+      fireEvent.click(b);
+      await waitFor(() => expect(text()).toContain("Everyone else scrolled past Drake Maye."));
+    } finally {
+      window.matchMedia = original;
+    }
   });
 
   it("pauses while the tab is hidden and resumes without skipping", () => {
