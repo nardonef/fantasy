@@ -67,7 +67,7 @@ describe("EmailCapture", () => {
     await userEvent.type(screen.getByPlaceholderText("you@yourleague.com"), "a@b.co");
     await userEvent.click(screen.getByRole("button", { name: /get access/i }));
     const body = JSON.parse((f.mock.calls[0] as unknown as [string, RequestInit])[1].body as string);
-    expect(body).toMatchObject({ email: "a@b.co", source: "hedge", company: "" });
+    expect(body).toMatchObject({ email: "a@b.co", source: "hedge", hp_x: "" });
   });
 
   it("gives each instance its own helper id and points aria-describedby at it", () => {

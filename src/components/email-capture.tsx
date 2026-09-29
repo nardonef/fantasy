@@ -7,7 +7,7 @@ type Status = "idle" | "loading" | "success" | "error";
 
 export function EmailCapture({ source = "hero", id }: { source?: Source; id?: string }) {
   const [email, setEmail] = useState("");
-  const [company, setCompany] = useState("");
+  const [hpX, setHpX] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string>();
   const [tag, setTag] = useState<Source>(source);
@@ -41,7 +41,7 @@ export function EmailCapture({ source = "hero", id }: { source?: Source; id?: st
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email, source: tag, company }),
+        body: JSON.stringify({ email, source: tag, hp_x: hpX }),
       });
       const data = (await res.json().catch(() => ({}))) as { error?: string };
       if (res.ok) { setStatus("success"); return; }
@@ -81,8 +81,8 @@ export function EmailCapture({ source = "hero", id }: { source?: Source; id?: st
           className={`min-w-0 flex-1 rounded-l-[9px] border border-r-0 bg-input-bg px-[18px] font-mono text-[15px] text-[#F4F4F7] outline-none placeholder:text-[#4A4A58] focus:border-wrapped ${status === "error" ? "!border-regret" : "border-input-border"}`}
         />
         <input
-          type="text" name="company" tabIndex={-1} autoComplete="off" aria-hidden
-          value={company} onChange={(e) => setCompany(e.target.value)}
+          type="text" name="hp_x" tabIndex={-1} autoComplete="off" aria-hidden data-1p-ignore data-lpignore="true"
+          value={hpX} onChange={(e) => setHpX(e.target.value)}
           className="absolute -left-[9999px] size-0 opacity-0"
         />
         <button

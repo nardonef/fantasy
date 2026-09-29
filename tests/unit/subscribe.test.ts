@@ -20,7 +20,7 @@ describe("handleSubscribe", () => {
   it.each([
     ["missing email", {}],
     ["not an email", { email: "nope" }],
-    ["email too long", { email: `${"a".repeat(250)}@b.co` }],
+    ["email too long", { email: `${"a".repeat(64)}@${"b".repeat(63)}.${"c".repeat(63)}.${"d".repeat(63)}.example.com` }],
     ["unknown source", { email: "a@b.co", source: "twitter" }],
     ["email wrong type", { email: 42 }],
     ["array body", []],
@@ -33,9 +33,18 @@ describe("handleSubscribe", () => {
     expect(d.insert).not.toHaveBeenCalled();
   });
 
+  it("accepts an address of exactly 254 characters", async () => {
+    const email = `${"a".repeat(64)}@${"b".repeat(63)}.${"c".repeat(63)}.${"d".repeat(57)}.com`;
+    expect(email).toHaveLength(254);
+    const d = deps();
+    const r = await handleSubscribe({ email }, d);
+    expect(r).toEqual({ ok: true });
+    expect(d.insert).toHaveBeenCalledWith(email, "hero");
+  });
+
   it("returns success without inserting when the honeypot is filled", async () => {
     const d = deps();
-    const r = await handleSubscribe({ email: "a@b.co", company: "Acme" }, d);
+    const r = await handleSubscribe({ email: "a@b.co", hp_x: "Acme" }, d);
     expect(r).toEqual({ ok: true });
     expect(d.insert).not.toHaveBeenCalled();
   });

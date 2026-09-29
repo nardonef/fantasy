@@ -11,11 +11,14 @@ describe.skipIf(!url)("subscribe against real Postgres", () => {
     const { handleSubscribe } = await import("@/lib/subscribe");
     const sql = neon(url as string);
     const tag = `it-${Date.now()}@example.com`;
-    await handleSubscribe({ email: `  ${tag.toUpperCase()} ` }, { insert: insertSignup });
-    await handleSubscribe({ email: tag }, { insert: insertSignup });
-    await handleSubscribe({ email: `hp-${tag}`, company: "x" }, { insert: insertSignup });
-    const rows = await sql`select email from signups where email in (${tag}, ${`hp-${tag}`})`;
-    expect(rows).toEqual([{ email: tag }]);
-    await sql`delete from signups where email = ${tag}`;
+    try {
+      await handleSubscribe({ email: `  ${tag.toUpperCase()} ` }, { insert: insertSignup });
+      await handleSubscribe({ email: tag }, { insert: insertSignup });
+      await handleSubscribe({ email: `hp-${tag}`, hp_x: "x" }, { insert: insertSignup });
+      const rows = await sql`select email from signups where email in (${tag}, ${`hp-${tag}`})`;
+      expect(rows).toEqual([{ email: tag }]);
+    } finally {
+      await sql`delete from signups where email in (${tag}, ${`hp-${tag}`})`;
+    }
   });
 });

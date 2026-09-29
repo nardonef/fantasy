@@ -9,14 +9,14 @@ export type SubscribeResult = { ok: true } | { ok: false; status: 400 | 500; err
 const schema = z.object({
   email: z.string().trim().toLowerCase().max(254).pipe(z.email()),
   source: z.enum(SOURCES).default("hero"),
-  company: z.string().optional(),
+  hp_x: z.string().optional(),
 });
 
 export async function handleSubscribe(body: unknown, deps: SubscribeDeps): Promise<SubscribeResult> {
   const parsed = schema.safeParse(body);
   if (!parsed.success) return { ok: false, status: 400, error: "Enter a valid email address." };
-  const { email, source, company } = parsed.data;
-  if (company) return { ok: true };
+  const { email, source, hp_x } = parsed.data;
+  if (hp_x) return { ok: true };
   try {
     await deps.insert(email, source);
     return { ok: true };
