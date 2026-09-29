@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <>
       <Nav />
-      <main className="overflow-x-clip">
+      <main>
         <Hero />
         <ToolCards />
       </main>

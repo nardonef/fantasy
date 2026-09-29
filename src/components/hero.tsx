@@ -4,7 +4,7 @@ import { StoryCardStack } from "./story-card-stack";
 export function Hero() {
   return (
     <section className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 pb-24 pt-[72px] md:px-12 min-[900px]:grid-cols-[1.15fr_1fr]">
-      <div className="flex flex-col gap-7">
+      <div className="flex min-w-0 flex-col gap-7">
         <div className="font-mono text-xs font-medium uppercase tracking-[0.24em] text-chalk-faint">We watched every week</div>
         <h1 className="font-semibold leading-[0.86] tracking-[-0.058em]" style={{ fontSize: "clamp(56px, 10vw, 112px)" }}>
           It&apos;s all on the record
@@ -15,7 +15,7 @@ export function Hero() {
         </p>
         <EmailCapture id="signup" />
       </div>
-      <div className="pb-6 pt-2"><StoryCardStack /></div>
+      <div className="overflow-x-clip pb-6 pt-2"><StoryCardStack /></div>
     </section>
   );
 }

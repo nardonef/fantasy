@@ -1,6 +1,10 @@
 import { expect, test } from "@playwright/test";
 
-for (const vp of [{ name: "mobile", width: 375, height: 812 }, { name: "desktop", width: 1280, height: 800 }]) {
+for (const vp of [
+  { name: "mobile-360", width: 360, height: 800 },
+  { name: "mobile", width: 375, height: 812 },
+  { name: "desktop", width: 1280, height: 800 },
+]) {
   test.describe(vp.name, () => {
     test.use({ viewport: { width: vp.width, height: vp.height } });
 
@@ -11,6 +15,17 @@ for (const vp of [{ name: "mobile", width: 375, height: 812 }, { name: "desktop"
       await expect(page.getByText("NOT AFFILIATED WITH THE NFL")).toBeVisible();
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       expect(overflow).toBeLessThanOrEqual(0);
+    });
+
+    test("signup form sits inside the 24px gutters", async ({ page }) => {
+      await page.goto("/");
+      const form = await page.locator("#signup").boundingBox();
+      const button = await page.getByRole("button", { name: /get access/i }).boundingBox();
+      expect(form).not.toBeNull();
+      expect(button).not.toBeNull();
+      expect(form!.x).toBeGreaterThanOrEqual(24 - 1);
+      expect(form!.x + form!.width).toBeLessThanOrEqual(vp.width - 24 + 1);
+      expect(button!.x + button!.width).toBeLessThanOrEqual(vp.width - 24 + 1);
     });
 
     test("email signup success path", async ({ page }) => {
@@ -26,6 +41,7 @@ for (const vp of [{ name: "mobile", width: 375, height: 812 }, { name: "desktop"
       await page.route("**/api/subscribe", async (r) => { body = r.request().postData() ?? ""; await r.fulfill({ json: { ok: true } }); });
       await page.goto("/");
       await page.getByRole("button", { name: /hedge/i }).click();
+      await expect(page.getByPlaceholder("you@yourleague.com")).toBeFocused();
       await page.getByPlaceholder("you@yourleague.com").fill("a@b.co");
       await page.getByRole("button", { name: /get access/i }).click();
       await expect(page.getByText(/on the list/i)).toBeVisible();
@@ -33,3 +49,16 @@ for (const vp of [{ name: "mobile", width: 375, height: 812 }, { name: "desktop"
     });
   });
 }
+
+test.describe("sticky nav anchors", () => {
+  test.use({ viewport: { width: 1280, height: 800 } });
+
+  test("Get early access lands the form below the header", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("link", { name: "Get early access" }).click();
+    await page.waitForFunction(() => window.scrollY > 0);
+    await page.waitForTimeout(1000);
+    const box = await page.locator("#signup").boundingBox();
+    expect(box!.y).toBeGreaterThanOrEqual(89);
+  });
+});

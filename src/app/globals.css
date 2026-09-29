@@ -27,7 +27,7 @@
   --ease-wrapped: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-html { background: var(--color-page); color: var(--color-chalk); scroll-behavior: smooth; }
+html { background: var(--color-page); color: var(--color-chalk); color-scheme: dark; scroll-behavior: smooth; scroll-padding-top: 104px; }
 body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
 ::selection { background: var(--color-wrapped); color: var(--color-field); }
 h1, h2, h3 { text-wrap: balance; }
