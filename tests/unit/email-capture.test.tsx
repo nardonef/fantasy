@@ -21,6 +21,17 @@ describe("EmailCapture", () => {
     expect(await screen.findByText("You're on the list. We'll keep it brief.")).toBeInTheDocument();
   });
 
+  it("moves focus to the success panel so the confirmation is announced", async () => {
+    mockFetch(async () => ({ ok: true, json: async () => ({ ok: true }) }));
+    render(<EmailCapture id="signup" />);
+    await userEvent.type(screen.getByPlaceholderText("you@yourleague.com"), "a@b.co");
+    await userEvent.click(screen.getByRole("button", { name: /get access/i }));
+    const panel = await screen.findByText("You're on the list. We'll keep it brief.");
+    expect(panel).toHaveAttribute("id", "signup");
+    expect(panel).toHaveAttribute("tabindex", "-1");
+    expect(panel).toHaveFocus();
+  });
+
   it("shows the server error, keeps the typed email, and flags the input", async () => {
     mockFetch(async () => ({ ok: false, json: async () => ({ error: "Something broke on our end. Try again." }) }));
     render(<EmailCapture />);

@@ -51,6 +51,18 @@ describe("StoryCardStack", () => {
     expect(idx()).toBe("1");
   });
 
+  it("pauses on keyboard focus and resumes on blur without resetting progress", () => {
+    render(<StoryCardStack />);
+    const b = screen.getByRole("button", { name: /next story card/i });
+    act(() => { vi.advanceTimersByTime(3000); });
+    fireEvent.focus(b);
+    act(() => { vi.advanceTimersByTime(10000); });
+    expect(idx()).toBe("0");
+    fireEvent.blur(b);
+    act(() => { vi.advanceTimersByTime(1000); });
+    expect(idx()).toBe("1");
+  });
+
   it("does not pause on a touch pointerenter", () => {
     render(<StoryCardStack />);
     const b = screen.getByRole("button", { name: /next story card/i });

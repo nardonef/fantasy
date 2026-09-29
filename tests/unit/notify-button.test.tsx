@@ -38,6 +38,23 @@ describe("NotifyButton", () => {
     expect(scroll.mock.calls[0]).toEqual([{ behavior: "smooth", block: "center" }]);
   });
 
+  it("uses instant scrolling when reduced motion is preferred", () => {
+    const original = window.matchMedia;
+    window.matchMedia = vi.fn().mockImplementation((q: string) => ({ matches: q.includes("reduce"), media: q })) as unknown as typeof window.matchMedia;
+    try {
+      render(
+        <>
+          <div id="signup" />
+          <NotifyButton>x</NotifyButton>
+        </>,
+      );
+      fireEvent.click(screen.getByRole("button", { name: "x" }));
+      expect(scroll.mock.calls[0]).toEqual([{ behavior: "auto", block: "center" }]);
+    } finally {
+      window.matchMedia = original;
+    }
+  });
+
   it("does not throw when #signup is absent", () => {
     render(<NotifyButton>x</NotifyButton>);
     expect(() => fireEvent.click(screen.getByRole("button", { name: "x" }))).not.toThrow();

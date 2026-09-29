@@ -7,7 +7,10 @@ export function NotifyButton({ children, className }: { children: React.ReactNod
       className={className}
       onClick={() => {
         window.dispatchEvent(new CustomEvent("fantasy:source", { detail: "hedge" }));
-        document.getElementById("signup")?.scrollIntoView({ behavior: "smooth", block: "center" });
+        document.getElementById("signup")?.scrollIntoView({
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+          block: "center",
+        });
       }}
     >
       {children}

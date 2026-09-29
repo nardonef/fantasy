@@ -85,6 +85,8 @@ export function StoryCardStack() {
         aria-describedby={contentId}
         onPointerEnter={(e) => { if (e.pointerType !== "touch") hoveredRef.current = true; }}
         onPointerLeave={(e) => { if (e.pointerType !== "touch") hoveredRef.current = false; }}
+        onFocus={() => { hoveredRef.current = true; }}
+        onBlur={() => { hoveredRef.current = false; }}
         className={`relative flex size-full cursor-pointer flex-col justify-between overflow-hidden rounded-[26px] px-7 pb-7 pt-14 text-left shadow-[0_40px_120px_-20px_rgba(0,0,0,0.8)] ${paper ? "bg-chalk text-field" : "bg-field text-chalk"}`}
       >
         <div className="absolute inset-x-[18px] top-[18px] flex gap-[5px]" aria-hidden>

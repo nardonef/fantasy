@@ -14,6 +14,13 @@ export function EmailCapture({ source = "hero", id }: { source?: Source; id?: st
   const helperId = useId();
   const inFlight = useRef(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const successRef = useRef<HTMLDivElement>(null);
+
+  // The form unmounts on success, which drops focus to <body>. Focusing the
+  // success panel announces its text once and keeps keyboard users oriented.
+  useEffect(() => {
+    if (status === "success") successRef.current?.focus({ preventScroll: true });
+  }, [status]);
 
   useEffect(() => {
     const onTag = (e: Event) => {
@@ -50,7 +57,7 @@ export function EmailCapture({ source = "hero", id }: { source?: Source; id?: st
 
   if (status === "success") {
     return (
-      <div id={id} className="flex h-14 max-w-[460px] items-center gap-3 rounded-[9px] border border-[#5B8CFF66] bg-[#1C1F33] px-[18px] text-[15px]">
+      <div ref={successRef} id={id} tabIndex={-1} className="flex h-14 max-w-[460px] items-center gap-3 rounded-[9px] border border-[#5B8CFF66] bg-[#1C1F33] px-[18px] text-[15px] outline-none">
         <span className="size-2 rounded-full bg-wrapped" aria-hidden />
         You&apos;re on the list. We&apos;ll keep it brief.
       </div>
