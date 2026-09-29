@@ -1,11 +1,12 @@
 import { insertSignup } from "@/db";
+import { clientIp } from "@/lib/client-ip";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { handleSubscribe } from "@/lib/subscribe";
 
 const limiter = createRateLimiter({ limit: 5, windowMs: 10 * 60 * 1000 });
 
 export async function POST(req: Request) {
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  const ip = clientIp(req.headers);
   if (!limiter.check(ip)) {
     return Response.json({ error: "Too many attempts. Try again in a few minutes." }, { status: 429 });
   }
