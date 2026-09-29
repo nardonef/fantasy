@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="60" viewBox="0 0 240 60">
+  <rect width="240" height="60" fill="#FAFAFA"/>
+  <text x="0" y="46" font-family="Geist, Inter, Arial, sans-serif" font-weight="600" font-size="48" letter-spacing="-2.4" fill="#0A0A0B">fantasy</text>
+  <circle cx="157" cy="41" r="5" fill="#2148D8"/>
+</svg>
