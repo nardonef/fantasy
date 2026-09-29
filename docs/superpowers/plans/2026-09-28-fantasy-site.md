@@ -8,7 +8,7 @@
 
 **Tech Stack:** Next.js 16.3, React 19, TypeScript, Tailwind v4, `next/font/google` (Geist, Geist Mono), `motion`, Drizzle ORM + `@neondatabase/serverless`, zod, Vitest + Testing Library (jsdom), Playwright, pnpm.
 
-**Spec:** `docs/superpowers/specs/2026-09-28-fantasy-site-design.md`. Visual/copy source of truth: `~/Downloads/Fantasy tools brand design.zip` → `design_handoff_fantasy_brand_site/README.md` (concept 2a). If the zip has been moved, the handoff was unpacked to `$CLAUDE_JOB_DIR/tmp/brand/` during brainstorming; re-unzip if needed.
+**Spec:** `docs/superpowers/specs/2026-09-28-fantasy-site-design.md`. Visual/copy source of truth: the design handoff zip (Fantasy tools brand design.zip, README.md inside `design_handoff_fantasy_brand_site/`) — concept 2a. If the zip has been moved, re-unzip if needed.
 
 ## Global Constraints
 
@@ -1565,7 +1565,7 @@ Expected: repo exists at `https://github.com/nardonef/fantasy` with `feat/site` 
 
 - [ ] **Step 3: Link Vercel via GitHub integration**
 
-Use `vercel link` (team `Frank's projects`, scope `franks-projects-71f567ad`) or the Vercel MCP `create_git_project` with the repo; framework preset Next.js, pnpm. Verify with `mcp__plugin_vercel_vercel__get_project` that the project shows the git repo `nardonef/fantasy` and production branch `main`.
+Use `vercel link` (the user's Vercel team) or the Vercel MCP `create_git_project` with the repo; framework preset Next.js, pnpm. Verify with `mcp__plugin_vercel_vercel__get_project` that the project shows the git repo `nardonef/fantasy` and production branch `main`.
 
 - [ ] **Step 4: Provision Neon (BILLABLE: confirm with the user first)**
 
@@ -1588,7 +1588,7 @@ Wait for the Vercel preview and the CI check. Fetch the preview URL with `mcp__p
 
 - [ ] **Step 7: Update memory (final step per user's global rule)**
 
-Write `project` memory `fantasy-parent-site` in `/Users/frank/.claude/projects/-Users-frank-Desktop/memory/` (repo, stack, tool URLs, Neon signups table, deploy flow, spec and plan paths, what remains: custom domain, Wrapped share OG) and add its one-line pointer to `MEMORY.md`. Report the PR URL and preview URL to the user.
+Write `project` memory `fantasy-parent-site` in the user's Claude Code project memory directory (repo, stack, tool URLs, Neon signups table, deploy flow, spec and plan paths, what remains: custom domain, Wrapped share OG) and add its one-line pointer to `MEMORY.md`. Report the PR URL and preview URL to the user.
 
 ---
 
