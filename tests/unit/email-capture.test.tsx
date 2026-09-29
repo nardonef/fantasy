@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { EmailCapture } from "@/components/email-capture";
@@ -57,5 +57,37 @@ describe("EmailCapture", () => {
     await userEvent.click(screen.getByRole("button", { name: /get access/i }));
     const body = JSON.parse((f.mock.calls[0] as unknown as [string, RequestInit])[1].body as string);
     expect(body).toMatchObject({ email: "a@b.co", source: "hedge", company: "" });
+  });
+
+  it("gives each instance its own helper id and points aria-describedby at it", () => {
+    render(<><EmailCapture /><EmailCapture /></>);
+    const inputs = screen.getAllByPlaceholderText("you@yourleague.com");
+    const ids = inputs.map((i) => i.getAttribute("aria-describedby"));
+    expect(ids[0]).toBeTruthy();
+    expect(ids[0]).not.toBe(ids[1]);
+    inputs.forEach((input, n) => {
+      const helper = document.getElementById(ids[n]!);
+      expect(helper).toHaveTextContent("We'll email less often than you check waivers.");
+      expect(helper?.closest("form")).toBe(input.closest("form"));
+    });
+  });
+
+  it("re-tags the source on the fantasy:source event", async () => {
+    const f = mockFetch(async () => ({ ok: true, json: async () => ({ ok: true }) }));
+    render(<EmailCapture />);
+    act(() => { window.dispatchEvent(new CustomEvent("fantasy:source", { detail: "hedge" })); });
+    await userEvent.type(screen.getByPlaceholderText("you@yourleague.com"), "a@b.co");
+    await userEvent.click(screen.getByRole("button", { name: /get access/i }));
+    const body = JSON.parse((f.mock.calls[0] as unknown as [string, RequestInit])[1].body as string);
+    expect(body).toMatchObject({ email: "a@b.co", source: "hedge" });
+  });
+
+  it("focuses the input without scrolling on the fantasy:source event", () => {
+    render(<EmailCapture />);
+    const input = screen.getByPlaceholderText("you@yourleague.com");
+    const focus = vi.spyOn(input, "focus");
+    act(() => { window.dispatchEvent(new CustomEvent("fantasy:source", { detail: "hedge" })); });
+    expect(focus).toHaveBeenCalledWith({ preventScroll: true });
+    expect(input).toHaveFocus();
   });
 });

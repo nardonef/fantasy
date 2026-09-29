@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import type { Source } from "@/lib/subscribe";
 
 type Status = "idle" | "loading" | "success" | "error";
@@ -11,6 +11,7 @@ export function EmailCapture({ source = "hero", id }: { source?: Source; id?: st
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string>();
   const [tag, setTag] = useState<Source>(source);
+  const helperId = useId();
   const inFlight = useRef(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -69,7 +70,7 @@ export function EmailCapture({ source = "hero", id }: { source?: Source; id?: st
           placeholder="you@yourleague.com"
           aria-label="Email address"
           aria-invalid={status === "error"}
-          aria-describedby="email-helper"
+          aria-describedby={helperId}
           className={`min-w-0 flex-1 rounded-l-[9px] border border-r-0 bg-input-bg px-[18px] font-mono text-[15px] text-[#F4F4F7] outline-none placeholder:text-[#4A4A58] focus:border-wrapped ${status === "error" ? "!border-regret" : "border-input-border"}`}
         />
         <input
@@ -85,7 +86,7 @@ export function EmailCapture({ source = "hero", id }: { source?: Source; id?: st
           {status === "loading" ? "…" : "Get access"}
         </button>
       </div>
-      <p id="email-helper" role={status === "error" ? "alert" : undefined} className={`mt-3 text-[13px] ${status === "error" ? "text-regret" : "text-[#5D5D6B]"}`}>
+      <p id={helperId} role={status === "error" ? "alert" : undefined} className={`mt-3 text-[13px] ${status === "error" ? "text-regret" : "text-[#5D5D6B]"}`}>
         {status === "error" ? error : "We'll email less often than you check waivers."}
       </p>
     </form>
