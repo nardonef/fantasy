@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="60" viewBox="0 0 440 60">
+  <rect width="440" height="60" fill="#060607"/>
+  <text x="0" y="46" font-family="Geist, Inter, Arial, sans-serif" font-weight="600" font-size="48" letter-spacing="-2.4" fill="#FAFAFA">fantasy</text>
+  <circle cx="157" cy="41" r="5" fill="#4CD48F"/>
+  <text x="172" y="46" font-family="Geist, Inter, Arial, sans-serif" font-weight="600" font-size="48" letter-spacing="-2.4" fill="#A1A1AA">rankings</text>
+</svg>
