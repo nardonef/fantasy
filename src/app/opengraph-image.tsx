@@ -11,9 +11,10 @@ export default async function OG() {
   return new ImageResponse(
     (
       <div style={{ width: 1200, height: 630, background: "#060607", color: "#FAFAFA", display: "flex", flexDirection: "column", justifyContent: "space-between", padding: 72, fontFamily: "Geist" }}>
-        <div style={{ display: "flex", alignItems: "baseline", fontSize: 56, letterSpacing: "-0.05em", fontWeight: 600 }}>
+        <div style={{ display: "flex", alignItems: "flex-end", fontSize: 56, letterSpacing: "-0.05em", fontWeight: 600 }}>
           fantasy
-          <div style={{ width: 11, height: 11, borderRadius: 11, background: "#5B8CFF", marginLeft: 3 }} />
+          {/* marginBottom compensates for satori's lack of a text baseline for empty boxes; tuned for Geist SemiBold at 56px */}
+          <div style={{ width: 11, height: 11, borderRadius: 11, background: "#5B8CFF", marginLeft: 3, marginBottom: 16 }} />
         </div>
         <div style={{ fontSize: 112, lineHeight: 0.9, letterSpacing: "-0.055em", fontWeight: 600, display: "flex" }}>Your league, measured.</div>
         <div style={{ fontSize: 22, letterSpacing: "0.22em", color: "#71717A", display: "flex" }}>WRAPPED · RANKINGS · HEDGE</div>
